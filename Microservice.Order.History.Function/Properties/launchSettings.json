@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Microservice.Order.History.Function": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7084",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_FUNCTIONS_ENVIRONMENT": "Development",
+        "DOTNET_USE_POLLING_FILE_WATCHER": "1",
+        "AzureWebJobsScriptRoot": "/home/site/wwwroot",
+        "AzureFunctionsJobHost__Logging__Console__IsEnabled": "true"
+      }
+    }
+  }
+}
