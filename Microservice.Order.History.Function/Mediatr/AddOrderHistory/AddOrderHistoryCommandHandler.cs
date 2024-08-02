@@ -14,11 +14,13 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
                                     IAzureServiceBusHelper azureServiceBusHelper,
                                     IMapper mapper,
                                     ILogger<AddOrderCommandHandler> logger) : IRequestHandler<AddOrderHistoryRequest, AddOrderHistoryResponse>
-{
+{ 
     private IOrderHistoryRepository _orderHistoryRepository { get; set; } = orderHistoryRepository;
     private IAzureServiceBusHelper _azureServiceBusHelper { get; set; } = azureServiceBusHelper;
     private IMapper _mapper { get; set; } = mapper;
     private ILogger<AddOrderCommandHandler> _logger { get; set; } = logger;
+
+    private record Order(Guid OrderId);
 
     public async Task<AddOrderHistoryResponse> Handle(AddOrderHistoryRequest addOrderHistoryRequest, CancellationToken cancellationToken)
     { 
@@ -54,11 +56,11 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
 
     private async Task SendOrderHistoryAddedToServiceBusQueueAsync(Guid id)
     { 
-        await _azureServiceBusHelper.SendMessage(Constants.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrderId(id));
+        await _azureServiceBusHelper.SendMessage(Constants.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
     }
 
-    private string GetSerializedOrderId(Guid orderId)
+    private string GetSerializedOrder(Guid orderId)
     {
-        return JsonSerializer.Serialize(orderId);
+        return JsonSerializer.Serialize(new Order(orderId));
     }
 } 
