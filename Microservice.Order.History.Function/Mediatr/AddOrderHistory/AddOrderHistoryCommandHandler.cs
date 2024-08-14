@@ -56,7 +56,7 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
 
     private async Task SendOrderHistoryAddedToServiceBusQueueAsync(Guid id)
     { 
-        await _azureServiceBusHelper.SendMessage(Constants.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
+        await _azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
     }
 
     private string GetSerializedOrder(Guid orderId)
