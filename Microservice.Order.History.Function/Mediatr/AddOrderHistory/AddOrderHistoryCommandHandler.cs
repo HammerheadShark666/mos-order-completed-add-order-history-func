@@ -35,7 +35,7 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
         } 
         else
         {
-            _logger.LogWarning(String.Format("OrderHistory record  already exists: {0}", orderHistory.Id.ToString()));
+            _logger.LogWarning(String.Format("OrderHistory record  already exists: {0}.", orderHistory.Id.ToString()));
         }
 
         return new AddOrderHistoryResponse(); 
