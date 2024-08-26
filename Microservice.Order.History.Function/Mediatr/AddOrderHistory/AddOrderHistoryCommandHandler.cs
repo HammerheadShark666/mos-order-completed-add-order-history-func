@@ -4,17 +4,16 @@ using Microservice.Order.History.Function.Data.Repository.Interfaces;
 using Microservice.Order.History.Function.Domain;
 using Microservice.Order.History.Function.Helpers;
 using Microservice.Order.History.Function.Helpers.Interfaces;
-using Microservice.Order.History.Function.MediatR.AddOrderHistory;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Microservice.Order.History.Function.MediatR.AddOrder;
+namespace Microservice.Order.History.Function.MediatR.AddOrderHistory;
 
 public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryRepository,
                                     IAzureServiceBusHelper azureServiceBusHelper,
                                     IMapper mapper,
                                     ILogger<AddOrderCommandHandler> logger) : IRequestHandler<AddOrderHistoryRequest, AddOrderHistoryResponse>
-{ 
+{
     private IOrderHistoryRepository _orderHistoryRepository { get; set; } = orderHistoryRepository;
     private IAzureServiceBusHelper _azureServiceBusHelper { get; set; } = azureServiceBusHelper;
     private IMapper _mapper { get; set; } = mapper;
@@ -23,30 +22,30 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
     private record Order(Guid OrderId);
 
     public async Task<AddOrderHistoryResponse> Handle(AddOrderHistoryRequest addOrderHistoryRequest, CancellationToken cancellationToken)
-    { 
+    {
         var orderHistory = _mapper.Map<OrderHistory>(addOrderHistoryRequest);
- 
-        if(!await _orderHistoryRepository.ExistsAsync(orderHistory.Id))
-        { 
+
+        if (!await _orderHistoryRepository.ExistsAsync(orderHistory.Id))
+        {
             UpdateOrderHistoryItems(orderHistory);
 
-            await SaveOrderHistoryAsync(orderHistory);  
+            await SaveOrderHistoryAsync(orderHistory);
             await SendOrderHistoryAddedToServiceBusQueueAsync(orderHistory.Id);
-        } 
+        }
         else
         {
-            _logger.LogWarning(String.Format("OrderHistory record  already exists: {0}.", orderHistory.Id.ToString()));
+            _logger.LogWarning($"OrderHistory record  already exists: {orderHistory.Id}.");
         }
 
-        return new AddOrderHistoryResponse(); 
-    } 
+        return new AddOrderHistoryResponse();
+    }
 
     private async Task SaveOrderHistoryAsync(Domain.OrderHistory orderHistory)
     {
         await _orderHistoryRepository.AddAsync(orderHistory);
     }
 
-    private void UpdateOrderHistoryItems(Domain.OrderHistory orderHistory)
+    private static void UpdateOrderHistoryItems(Domain.OrderHistory orderHistory)
     {
         foreach (var orderItem in orderHistory.OrderItems)
         {
@@ -55,12 +54,12 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
     }
 
     private async Task SendOrderHistoryAddedToServiceBusQueueAsync(Guid id)
-    { 
+    {
         await _azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
     }
 
-    private string GetSerializedOrder(Guid orderId)
+    private static string GetSerializedOrder(Guid orderId)
     {
         return JsonSerializer.Serialize(new Order(orderId));
     }
-} 
+}
