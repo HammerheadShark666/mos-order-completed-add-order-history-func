@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using Microservice.Order.History.Function.Domain;
-using Microservice.Order.History.Function.MediatR.AddOrderHistory;
 
-namespace Microservice.Order.History.Function.MediatR.AddOrder;
+namespace Microservice.Order.History.Function.MediatR.AddOrderHistory;
 
 public class AddOrderHistoryMapper : Profile
 {
     public AddOrderHistoryMapper()
     {
-        base.CreateMap<AddOrderHistoryOrderItemRequest, OrderItem>();   
+        base.CreateMap<AddOrderHistoryOrderItemRequest, OrderItem>();
         base.CreateMap<AddOrderHistoryRequest, OrderHistory>();
 
         base.CreateMap<AddOrderHistoryRequest, OrderHistory>()

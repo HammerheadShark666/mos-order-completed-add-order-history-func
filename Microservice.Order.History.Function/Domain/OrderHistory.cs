@@ -8,18 +8,18 @@ public class OrderHistory
 {
     [Key]
     public Guid Id { get; set; }
-     
+
     public Guid CustomerId { get; set; }
 
     [MaxLength(10)]
-    public string OrderNumber {  get; set; }
+    public string OrderNumber { get; set; } = string.Empty;
 
     public DateOnly OrderPlaced { get; set; }
 
-    public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    public List<OrderItem> OrderItems { get; set; } = [];
 
     [MaxLength(25)]
-    public string OrderStatus { get; set; } 
+    public string OrderStatus { get; set; } = string.Empty;
 
     [Required]
     [Column(TypeName = "decimal(19, 2)")]
@@ -28,11 +28,11 @@ public class OrderHistory
 
     [Required]
     [StringLength(50)]
-    public string AddressSurname { get; set; }
+    public string AddressSurname { get; set; } = string.Empty;
 
     [Required]
     [StringLength(50)]
-    public string AddressForename { get; set; }
+    public string AddressForename { get; set; } = string.Empty;
 
 
     [MaxLength(50)]
@@ -46,19 +46,19 @@ public class OrderHistory
 
     [MaxLength(50)]
     [Required]
-    public string TownCity { get; set; }
+    public string TownCity { get; set; } = string.Empty;
 
     [MaxLength(50)]
     public string? County { get; set; }
 
     [MaxLength(10)]
-    public string? Postcode { get; set; } 
+    public string? Postcode { get; set; }
 
     [Required]
     [MaxLength(50)]
-    public string Country { get; set; } 
-     
+    public string Country { get; set; } = string.Empty;
+
     [Required]
     public DateTime Created { get; set; } = DateTime.Now;
-     
+
 }

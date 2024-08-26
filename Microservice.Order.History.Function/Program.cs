@@ -1,11 +1,10 @@
-using FluentValidation;
 using MediatR;
-using Microservice.Order.History.Function.Data.Contexts;
+using Microservice.Order.History.Function.Data.Context;
 using Microservice.Order.History.Function.Data.Repository;
 using Microservice.Order.History.Function.Data.Repository.Interfaces;
 using Microservice.Order.History.Function.Helpers;
 using Microservice.Order.History.Function.Helpers.Interfaces;
-using Microservice.Order.History.Function.MediatR.AddOrder;
+using Microservice.Order.History.Function.MediatR.AddOrderHistory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +27,7 @@ var host = new HostBuilder()
         services.ConfigureFunctionsApplicationInsights();
 
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-         
+
         services.AddMediatR(_ => _.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
         services.AddAutoMapper(Assembly.GetAssembly(typeof(AddOrderHistoryMapper)));

@@ -7,9 +7,8 @@ public class JsonHelper
 {
     public static T GetRequest<T>(byte[] message)
     {
-        if(message == null)
-            throw new ArgumentNullException("Message parameter cannot be null.");
-
-        return JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(message));
+        return message == null
+            ? throw new ArgumentNullException("Message parameter cannot be null.")
+            : JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(message));
     }
 }
