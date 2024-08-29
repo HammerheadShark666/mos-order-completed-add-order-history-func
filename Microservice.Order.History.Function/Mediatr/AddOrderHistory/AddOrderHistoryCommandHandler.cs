@@ -14,18 +14,13 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
                                     IMapper mapper,
                                     ILogger<AddOrderCommandHandler> logger) : IRequestHandler<AddOrderHistoryRequest, AddOrderHistoryResponse>
 {
-    private IOrderHistoryRepository _orderHistoryRepository { get; set; } = orderHistoryRepository;
-    private IAzureServiceBusHelper _azureServiceBusHelper { get; set; } = azureServiceBusHelper;
-    private IMapper _mapper { get; set; } = mapper;
-    private ILogger<AddOrderCommandHandler> _logger { get; set; } = logger;
-
     private record Order(Guid OrderId);
 
     public async Task<AddOrderHistoryResponse> Handle(AddOrderHistoryRequest addOrderHistoryRequest, CancellationToken cancellationToken)
     {
-        var orderHistory = _mapper.Map<OrderHistory>(addOrderHistoryRequest);
+        var orderHistory = mapper.Map<OrderHistory>(addOrderHistoryRequest);
 
-        if (!await _orderHistoryRepository.ExistsAsync(orderHistory.Id))
+        if (!await orderHistoryRepository.ExistsAsync(orderHistory.Id))
         {
             UpdateOrderHistoryItems(orderHistory);
 
@@ -34,7 +29,7 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
         }
         else
         {
-            _logger.LogWarning($"OrderHistory record  already exists: {orderHistory.Id}.");
+            logger.LogWarning("OrderHistory record  already exists: {orderHistory.Id}.", orderHistory.Id);
         }
 
         return new AddOrderHistoryResponse();
@@ -42,7 +37,7 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
 
     private async Task SaveOrderHistoryAsync(Domain.OrderHistory orderHistory)
     {
-        await _orderHistoryRepository.AddAsync(orderHistory);
+        await orderHistoryRepository.AddAsync(orderHistory);
     }
 
     private static void UpdateOrderHistoryItems(Domain.OrderHistory orderHistory)
@@ -55,7 +50,7 @@ public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryReposito
 
     private async Task SendOrderHistoryAddedToServiceBusQueueAsync(Guid id)
     {
-        await _azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
+        await azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
     }
 
     private static string GetSerializedOrder(Guid orderId)

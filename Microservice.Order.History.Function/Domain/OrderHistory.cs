@@ -60,5 +60,4 @@ public class OrderHistory
 
     [Required]
     public DateTime Created { get; set; } = DateTime.Now;
-
 }
