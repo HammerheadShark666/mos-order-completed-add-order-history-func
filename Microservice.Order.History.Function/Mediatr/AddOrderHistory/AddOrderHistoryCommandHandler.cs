@@ -9,10 +9,10 @@ using System.Text.Json;
 
 namespace Microservice.Order.History.Function.MediatR.AddOrderHistory;
 
-public class AddOrderCommandHandler(IOrderHistoryRepository orderHistoryRepository,
+public class AddOrderHistoryCommandHandler(IOrderHistoryRepository orderHistoryRepository,
                                     IAzureServiceBusHelper azureServiceBusHelper,
                                     IMapper mapper,
-                                    ILogger<AddOrderCommandHandler> logger) : IRequestHandler<AddOrderHistoryRequest, AddOrderHistoryResponse>
+                                    ILogger<AddOrderHistoryCommandHandler> logger) : IRequestHandler<AddOrderHistoryRequest, AddOrderHistoryResponse>
 {
     private record Order(Guid OrderId);
 

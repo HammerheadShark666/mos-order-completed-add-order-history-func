@@ -396,3 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/Microservice.Order.History.Function.Test.Unit/.runsettings
