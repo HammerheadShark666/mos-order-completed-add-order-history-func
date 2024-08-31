@@ -36,7 +36,7 @@ jobs:
   
   build-and-deploy:
     runs-on: windows-latest
-    
+    needs: unit-tests
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
