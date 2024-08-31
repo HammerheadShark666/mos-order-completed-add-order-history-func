@@ -14,6 +14,26 @@ env:
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 jobs:
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    env: 
+      AZURE_SERVICE_BUS_CONNECTION: ${{ secrets.AZURE_SERVICE_BUS_CONNECTION }}
+      AZURE_SERVICE_BUS_QUEUE_ORDER_HISTORY_ADDED: ${{ secrets.AZURE_SERVICE_BUS_QUEUE_ORDER_HISTORY_ADDED }}   
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Build with dotnet
+        run: dotnet build Microservice.Order.History.Function/Microservice.Order.History.Function.csproj --configuration Release
+
+      - name: Unit Tests
+        run: dotnet test Microservice.Order.History.Function.Test.Unit/Microservice.Order.History.Function.Test.Unit.csproj --logger "console;verbosity=detailed"
+  
   build-and-deploy:
     runs-on: windows-latest
     
