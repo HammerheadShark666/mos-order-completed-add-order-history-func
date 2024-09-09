@@ -34,8 +34,8 @@ public class OrderCompleted(ILogger<OrderCompleted> logger, IMediator mediator)
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Internal Error: Id: {addOrderHistoryRequest.Id}", addOrderHistoryRequest.Id);
-            await messageActions.DeadLetterMessageAsync(message, null, Constants.FailureReasonInternal, ex.StackTrace);
+            logger.LogError(ex, "Internal Error: Id: {addOrderHistoryRequest.Id} - {ex.Message}", addOrderHistoryRequest.Id, ex.Message);
+            await messageActions.DeadLetterMessageAsync(message, null, ex.Message, ex.StackTrace);
         }
     }
 }
