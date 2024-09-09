@@ -12,7 +12,7 @@ public class OrderCompleted(ILogger<OrderCompleted> logger, IMediator mediator)
 {
     [Function(nameof(OrderCompleted))]
     public async Task Run([ServiceBusTrigger("%" + Constants.AzureServiceBusQueueOrderCompleted + "%",
-                                             Connection = Constants.AzureServiceBusConnection)]
+                                             Connection = Constants.AzureServiceBusConnectionManagedIdentity)]
                                              ServiceBusReceivedMessage message,
                                              ServiceBusMessageActions messageActions)
     {
