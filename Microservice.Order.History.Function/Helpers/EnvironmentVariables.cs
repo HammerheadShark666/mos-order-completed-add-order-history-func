@@ -4,7 +4,6 @@ namespace Microservice.Order.History.Function.Helpers;
 
 public class EnvironmentVariables
 {
-    public static string AzureServiceBusConnection => GetEnvironmentVariable(Constants.AzureServiceBusConnection);
     public static string AzureServiceBusQueueOrderHistoryAdded => GetEnvironmentVariable(Constants.AzureServiceBusQueueOrderHistoryAdded);
 
     public static string GetEnvironmentVariable(string name)
