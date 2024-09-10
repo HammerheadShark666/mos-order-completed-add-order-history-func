@@ -40,7 +40,7 @@ var host = new HostBuilder()
 
         services.AddAzureClients(builder =>
         {
-            builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnectionManagedIdentity));
+            builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
             builder.UseCredential(new ManagedIdentityCredential());
         });
 
