@@ -1,7 +1,7 @@
 ﻿namespace Microservice.Order.History.Function.Helpers;
 public class Constants
 {
-    public const string AzureServiceBusConnectionManagedIdentity = "ServiceBusConnection";
+    public const string AzureServiceBusConnectionManagedIdentity = "ServiceBusConnection__fullyQualifiedNamespace";
     public const string AzureServiceBusQueueOrderCompleted = "AZURE_SERVICE_BUS_QUEUE_ORDER_COMPLETED";
     public const string AzureServiceBusQueueOrderHistoryAdded = "AZURE_SERVICE_BUS_QUEUE_ORDER_HISTORY_ADDED";
 
