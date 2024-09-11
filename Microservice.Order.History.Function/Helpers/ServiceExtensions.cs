@@ -1,5 +1,4 @@
-﻿using Azure.Identity;
-using MediatR;
+﻿using MediatR;
 using Microservice.Order.History.Function.Data.Context;
 using Microservice.Order.History.Function.Data.Repository;
 using Microservice.Order.History.Function.Data.Repository.Interfaces;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -53,11 +51,11 @@ public static class ServiceExtensions
 
     public static void ConfigureServiceBusClient(IServiceCollection services, IWebHostEnvironment environment)
     {
-        services.AddAzureClients(builder =>
-        {
-            builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
-            builder.UseCredential(new ManagedIdentityCredential());
-        });
+        //services.AddAzureClients(builder =>
+        //{
+        //    builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
+        //    builder.UseCredential(new ManagedIdentityCredential());
+        //});
 
         //if (environment.IsDevelopment())
         //{ 
