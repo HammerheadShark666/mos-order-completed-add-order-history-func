@@ -13,6 +13,8 @@ public class OrderItem
     [Key]
     public Guid ProductId { get; set; }
 
+    public OrderHistory Order { get; set; } = default!;
+
     [MaxLength(150)]
     public string Name { get; set; } = string.Empty;
 
