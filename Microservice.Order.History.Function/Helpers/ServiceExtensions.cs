@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 
@@ -54,21 +53,27 @@ public static class ServiceExtensions
 
     public static void ConfigureServiceBusClient(IServiceCollection services, IWebHostEnvironment environment)
     {
-        if (environment.IsDevelopment())
+        services.AddAzureClients(builder =>
         {
-            services.AddAzureClients(builder =>
-            {
-                builder.AddServiceBusClient(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnectionString));
-            });
-        }
-        else
-        {
-            services.AddAzureClients(builder =>
-            {
-                builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnectionManagedIdentity));
-                builder.UseCredential(new ManagedIdentityCredential());
-            });
-        }
+            builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
+            builder.UseCredential(new ManagedIdentityCredential());
+        });
+
+        //if (environment.IsDevelopment())
+        //{ 
+        //    services.AddAzureClients(builder =>
+        //    {
+        //        builder.AddServiceBusClient(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnectionString));
+        //    });
+        //}
+        //else
+        //{
+        //    services.AddAzureClients(builder =>
+        //    {
+        //        builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnectionManagedIdentity));
+        //        builder.UseCredential(new ManagedIdentityCredential());
+        //    });
+        //}
     }
 
     public static void ConfigureLogging(IServiceCollection services)
