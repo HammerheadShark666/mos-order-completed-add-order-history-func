@@ -2,15 +2,12 @@
 using MediatR;
 using Microservice.Order.History.Function.Data.Repository.Interfaces;
 using Microservice.Order.History.Function.Domain;
-using Microservice.Order.History.Function.Helpers;
-using Microservice.Order.History.Function.Helpers.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace Microservice.Order.History.Function.MediatR.AddOrderHistory;
 
 public class AddOrderHistoryCommandHandler(IOrderHistoryRepository orderHistoryRepository,
-                                    IAzureServiceBusHelper azureServiceBusHelper,
+                                    //IAzureServiceBusHelper azureServiceBusHelper,
                                     IMapper mapper,
                                     ILogger<AddOrderHistoryCommandHandler> logger) : IRequestHandler<AddOrderHistoryRequest, AddOrderHistoryResponse>
 {
@@ -25,7 +22,7 @@ public class AddOrderHistoryCommandHandler(IOrderHistoryRepository orderHistoryR
             UpdateOrderHistoryItems(orderHistory);
 
             await SaveOrderHistoryAsync(orderHistory);
-            await SendOrderHistoryAddedToServiceBusQueueAsync(orderHistory.Id);
+            //await SendOrderHistoryAddedToServiceBusQueueAsync(orderHistory.Id);
         }
         else
         {
@@ -48,13 +45,13 @@ public class AddOrderHistoryCommandHandler(IOrderHistoryRepository orderHistoryR
         }
     }
 
-    private async Task SendOrderHistoryAddedToServiceBusQueueAsync(Guid id)
-    {
-        await azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
-    }
+    //private async Task SendOrderHistoryAddedToServiceBusQueueAsync(Guid id)
+    //{
+    //    await azureServiceBusHelper.SendMessage(EnvironmentVariables.AzureServiceBusQueueOrderHistoryAdded, GetSerializedOrder(id));
+    //}
 
-    private static string GetSerializedOrder(Guid orderId)
-    {
-        return JsonSerializer.Serialize(new Order(orderId));
-    }
+    //private static string GetSerializedOrder(Guid orderId)
+    //{
+    //    return JsonSerializer.Serialize(new Order(orderId));
+    //}
 }
