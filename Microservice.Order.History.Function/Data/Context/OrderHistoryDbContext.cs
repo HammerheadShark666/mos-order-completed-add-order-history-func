@@ -11,7 +11,6 @@ public class OrderHistoryDbContext(DbContextOptions<OrderHistoryDbContext> optio
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Domain.OrderHistory>().HasMany(e => e.OrderItems);
         modelBuilder.Entity<Domain.OrderItem>().HasKey(e => new { e.OrderId, e.ProductId });
     }
 }
