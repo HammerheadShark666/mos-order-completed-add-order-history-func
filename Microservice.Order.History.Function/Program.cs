@@ -1,19 +1,8 @@
-using Azure.Identity;
-using MediatR;
-using Microservice.Order.History.Function.Data.Context;
-using Microservice.Order.History.Function.Data.Repository;
-using Microservice.Order.History.Function.Data.Repository.Interfaces;
 using Microservice.Order.History.Function.Helpers;
-using Microservice.Order.History.Function.Helpers.Interfaces;
-using Microservice.Order.History.Function.MediatR.AddOrderHistory;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Azure;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
@@ -24,29 +13,19 @@ var host = new HostBuilder()
     })
     .ConfigureServices(services =>
     {
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
+        var builder = WebApplication.CreateBuilder(args);
+        var environment = builder.Environment;
 
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>()
                               ?? throw new Exception("Configuration not created.");
 
-        services.AddMediatR(_ => _.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-        services.AddAutoMapper(Assembly.GetAssembly(typeof(AddOrderHistoryMapper)));
-        services.AddScoped<IOrderHistoryRepository, OrderHistoryRepository>();
-        services.AddScoped<IAzureServiceBusHelper, AzureServiceBusHelper>();
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddMemoryCache();
-
-        services.AddAzureClients(builder =>
-        {
-            builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
-            builder.UseCredential(new ManagedIdentityCredential());
-        });
-
-        services.AddDbContextFactory<OrderHistoryDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString(Constants.DatabaseConnectionString),
-            options => options.EnableRetryOnFailure()));
+        ServiceExtensions.ConfigureApplicationInsights(services);
+        ServiceExtensions.ConfigureMediatr(services);
+        ServiceExtensions.ConfigureDependencyInjection(services);
+        ServiceExtensions.ConfigureMemoryCache(services);
+        ServiceExtensions.ConfigureSqlServer(services, configuration);
+        ServiceExtensions.ConfigureServiceBusClient(services, environment);
+        ServiceExtensions.ConfigureLogging(services);
     })
     .Build();
 
