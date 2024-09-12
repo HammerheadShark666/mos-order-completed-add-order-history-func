@@ -3,6 +3,7 @@ public class Constants
 {
     public const string AzureServiceBusConnectionManagedIdentity = "ServiceBusConnection";
     public const string AzureServiceBusConnection = "ServiceBusConnection__fullyQualifiedNamespace";
+    public const string AzureServiceBusConnectionString = "AZURE_SERVICE_BUS_CONNECTION";
     public const string AzureServiceBusQueueOrderCompleted = "AZURE_SERVICE_BUS_QUEUE_ORDER_COMPLETED";
     public const string AzureServiceBusQueueOrderHistoryAdded = "AZURE_SERVICE_BUS_QUEUE_ORDER_HISTORY_ADDED";
 
