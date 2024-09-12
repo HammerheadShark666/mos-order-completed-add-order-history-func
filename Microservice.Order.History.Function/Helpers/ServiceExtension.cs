@@ -5,18 +5,20 @@ using Microservice.Order.History.Function.Data.Repository;
 using Microservice.Order.History.Function.Data.Repository.Interfaces;
 using Microservice.Order.History.Function.Helpers.Interfaces;
 using Microservice.Order.History.Function.MediatR.AddOrderHistory;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 
 namespace Microservice.Order.History.Function.Helpers;
 
-public class ServiceExtension
+public static class ServiceExtension
 {
     public static void ConfigureDependencyInjection(IServiceCollection services)
     {
@@ -58,12 +60,22 @@ public class ServiceExtension
                 options => options.EnableRetryOnFailure()));
     }
 
-    public static void ConfigureServiceBusClient(IServiceCollection services)
+    public static void ConfigureServiceBusClient(IServiceCollection services, IWebHostEnvironment environment)
     {
-        services.AddAzureClients(builder =>
+        if (environment.IsProduction())
         {
-            builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
-            builder.UseCredential(new ManagedIdentityCredential());
-        });
+            services.AddAzureClients(builder =>
+            {
+                builder.AddServiceBusClientWithNamespace(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnection));
+                builder.UseCredential(new ManagedIdentityCredential());
+            });
+        }
+        else
+        {
+            services.AddAzureClients(builder =>
+            {
+                builder.AddServiceBusClient(EnvironmentVariables.GetEnvironmentVariable(Constants.AzureServiceBusConnectionString));
+            });
+        }
     }
 }
