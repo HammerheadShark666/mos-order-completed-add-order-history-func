@@ -56,8 +56,7 @@ public static class ServiceExtension
     public static void ConfigureSqlServer(IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContextFactory<OrderHistoryDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString(Constants.DatabaseConnectionString),
-                options => options.EnableRetryOnFailure()));
+            options.UseSqlServer(configuration.GetConnectionString(Constants.DatabaseConnectionString)));
     }
 
     public static void ConfigureServiceBusClient(IServiceCollection services, IWebHostEnvironment environment)

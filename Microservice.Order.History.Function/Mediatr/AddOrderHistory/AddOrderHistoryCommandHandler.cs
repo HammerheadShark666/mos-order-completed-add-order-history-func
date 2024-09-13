@@ -6,6 +6,7 @@ using Microservice.Order.History.Function.Helpers;
 using Microservice.Order.History.Function.Helpers.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using System.Transactions;
 
 namespace Microservice.Order.History.Function.MediatR.AddOrderHistory;
 
@@ -22,10 +23,27 @@ public class AddOrderHistoryCommandHandler(IOrderHistoryRepository orderHistoryR
 
         if (!await orderHistoryRepository.ExistsAsync(orderHistory.Id))
         {
+            using var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             UpdateOrderHistoryItems(orderHistory);
-
             await SaveOrderHistoryAsync(orderHistory);
-            await SendOrderHistoryAddedToServiceBusQueueAsync(orderHistory.Id);
+
+            using (var tx = new TransactionScope(TransactionScopeOption.Suppress, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await SendOrderHistoryAddedToServiceBusQueueAsync(orderHistory.Id);
+                tx.Complete();
+            }
+            ts.Complete();
+
+
+
+
+
+
+
+            //UpdateOrderHistoryItems(orderHistory);
+
+            //await SaveOrderHistoryAsync(orderHistory);
+            //await SendOrderHistoryAddedToServiceBusQueueAsync(orderHistory.Id);
         }
         else
         {
