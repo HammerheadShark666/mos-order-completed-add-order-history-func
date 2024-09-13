@@ -33,17 +33,6 @@ public class AddOrderHistoryCommandHandler(IOrderHistoryRepository orderHistoryR
                 tx.Complete();
             }
             ts.Complete();
-
-
-
-
-
-
-
-            //UpdateOrderHistoryItems(orderHistory);
-
-            //await SaveOrderHistoryAsync(orderHistory);
-            //await SendOrderHistoryAddedToServiceBusQueueAsync(orderHistory.Id);
         }
         else
         {
