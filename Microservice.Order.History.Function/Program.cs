@@ -23,7 +23,7 @@ var host = new HostBuilder()
         ServiceExtension.ConfigureApplicationInsights(services);
         ServiceExtension.ConfigureMediatr(services);
         ServiceExtension.ConfigureMemoryCache(services);
-        ServiceExtension.ConfigureSqlServer(services, configuration);
+        ServiceExtension.ConfigureSqlServer(services, builder.Configuration, environment);
         ServiceExtension.ConfigureServiceBusClient(services, environment);
     })
     .Build();
